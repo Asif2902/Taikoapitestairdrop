@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maiko Airdrop</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Maiko Airdrop</h1>
+    </header>
+    <main>
+      <div id="wallet-section" class="section">
+        <button id="connect-wallet-btn">Connect Wallet</button>
+      </div>
+      <div id="allocation-section" class="section hidden">
+        <p>Connected as: <span id="account-address"></span></p>
+        <p id="allocation-message">Checking your allocation...</p>
+        <button id="claim-tokens-btn" class="hidden">Claim Tokens</button>
+        <p id="claim-status" class="hidden"></p>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.7.3/dist/web3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@metamask/detect-provider@1.2.0/dist/detect-provider.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
