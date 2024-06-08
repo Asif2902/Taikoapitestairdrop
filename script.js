@@ -33,6 +33,7 @@ async function fetchAllocation(address) {
     allocation = BigInt(response.data.value) * BigInt(20) * BigInt(10 ** tokenDecimals);
     if (allocation > 0) {
       document.getElementById('allocation-message').textContent = `Your Allocation: ${web3.utils.fromWei(allocation.toString(), 'ether')} TAIKO`;
+      document.getElementById('claim-tokens-btn').classList.remove('hidden');
       await checkClaimedStatus(address);
     } else {
       document.getElementById('allocation-message').textContent = 'You have no allocation.';
@@ -55,11 +56,9 @@ async function checkClaimedStatus(address) {
       document.getElementById('allocation-message').textContent += ' You have already claimed.';
       document.getElementById('claim-tokens-btn').textContent = 'Claimed';
       document.getElementById('claim-tokens-btn').disabled = true;
-      document.getElementById('claim-tokens-btn').classList.remove('hidden');
     } else {
       document.getElementById('claim-tokens-btn').textContent = 'Claim Tokens';
       document.getElementById('claim-tokens-btn').disabled = false;
-      document.getElementById('claim-tokens-btn').classList.remove('hidden');
     }
   } catch (error) {
     console.error('Error checking claim status:', error);
