@@ -1,9 +1,10 @@
-const AirdropAddress = '0x491DEfa6C9e32cb71441aF38ADE05A028A998E0D';
+const AirdropAddress = '0xa17Cc3eE45e3F4b60313489Ad1072E683Ee2E5d5';
 const tokenDecimals = 18;
 let web3;
 let account;
 let allocation;
 let AirdropABI;
+let proofs = [];
 
 document.getElementById('connect-wallet-btn').addEventListener('click', connectWallet);
 document.getElementById('claim-tokens-btn').addEventListener('click', claimTokens);
@@ -69,18 +70,42 @@ function obfuscateAddress(address) {
   return `${address.substring(0, 6)}****${address.substring(address.length - 4)}`;
 }
 
+async function fetchProofs(requiredProofsCount) {
+  try {
+    const response = await axios.get('apiproofs.json');
+    proofs = response.data.slice(0, requiredProofsCount).map(p => web3.utils.keccak256(p));
+  } catch (error) {
+    console.error('Error fetching proofs:', error);
+  }
+}
+
+async function getRequiredProofsCount() {
+  try {
+    const contract = new web3.eth.Contract(AirdropABI, AirdropAddress);
+    const requiredProofsCount = await contract.methods.getRequiredProofs().call();
+    return requiredProofsCount;
+  } catch (error) {
+    console.error('Error fetching required proofs count:', error);
+    return 0;
+  }
+}
+
 async function claimTokens() {
   if (!account) return;
   const button = document.getElementById('claim-tokens-btn');
   const status = document.getElementById('claim-status');
   button.disabled = true;
   button.textContent = 'Claiming...';
+
+  const requiredProofsCount = await getRequiredProofsCount();
+  await fetchProofs(requiredProofsCount);
+
   try {
     const contract = new web3.eth.Contract(AirdropABI, AirdropAddress);
 
     const amount = allocation.toString();
 
-    await contract.methods.claim(amount).send({
+    await contract.methods.claim(amount, proofs).send({
       from: account,
       value: web3.utils.toWei('0.0004', 'ether')
     });
