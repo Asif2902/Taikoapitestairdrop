@@ -73,7 +73,7 @@ function obfuscateAddress(address) {
 async function fetchProofs(requiredProofsCount) {
   try {
     const response = await axios.get('apiproofs.json');
-    proofs = response.data.slice(0, requiredProofsCount).map(p => web3.utils.keccak256(p));
+    proofs = response.data.slice(0, requiredProofsCount);
   } catch (error) {
     console.error('Error fetching proofs:', error);
   }
